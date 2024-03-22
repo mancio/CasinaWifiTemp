@@ -20,8 +20,5 @@ remember to include in the folder include the file ``secrets.h``
 // RTDB URL
 #define DATABASE_URL "REPLACE_WITH_YOUR_DATABASE_URL"
 
-// GPIO where the DS18B20 is connected
-#define ONE_WIRE_BUS D2
-
 #endif // CASINAWIFITEMP_SECRETS_H
 ```
