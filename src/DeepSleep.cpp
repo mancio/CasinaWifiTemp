@@ -2,6 +2,6 @@
 #include <Esp.h>
 
 void goToDeepSleep() {
-    ESP.deepSleep(3600e6); // 1 hour
+    EspClass::deepSleep(3600e6); // 1 hour
 }
 
