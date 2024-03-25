@@ -1,6 +1,10 @@
 #ifndef DeepSleep_h
 #define DeepSleep_h
 
+#include <Arduino.h>
+
+unsigned long convertToMicroseconds(unsigned long number, const String& unit);
+
 /**
  * @brief Puts the device into deep sleep mode.
  *

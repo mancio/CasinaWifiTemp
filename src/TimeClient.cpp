@@ -11,6 +11,7 @@ void setupTimeClient() {
 
 unsigned long getCurrentTime() {
     timeClient.update();
-    return timeClient.getEpochTime();
+    const unsigned long epochTime = timeClient.getEpochTime();
+    return epochTime;
 }
 
