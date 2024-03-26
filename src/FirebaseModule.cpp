@@ -4,9 +4,6 @@
 
 //Provide the token generation process info.
 #include "addons/TokenHelper.h"
-//Provide the RTDB payload printing info and other helper functions.
-#include "addons/RTDBHelper.h"
-
 
 //Define Firebase Data object
 FirebaseData fbdo;
@@ -17,25 +14,44 @@ FirebaseConfig config;
 
 void initializeFirebase() {
 
-
-    /* Assign the api key (required) */
+    // Set Firebase API key and database URL
     config.api_key = API_KEY;
-
-    /* Assign the RTDB URL (required) */
     config.database_url = DATABASE_URL;
 
-    /* Sign up */
-    if (Firebase.signUp(&config, &auth, "", "")) {
-        Serial.println("ok");
-    } else {
-        Serial.printf("%s\n", config.signer.signupError.message.c_str());
+    // Optional: Set WiFi reconnection
+    WiFi.setAutoReconnect(true);
+
+    int retryCount = 0;
+    const int maxRetries = 3; // Maximum number of retries
+    bool signedUp = false;
+
+    while (!signedUp && retryCount < maxRetries) {
+        // Try to sign up anonymously (if needed)
+        if (Firebase.signUp(&config, &auth, "", "")) {
+            Serial.println("Firebase sign-up (or sign-in) successful.");
+            signedUp = true;
+        } else {
+            Serial.print("Firebase sign-up failed: ");
+            Serial.println(config.signer.signupError.message.c_str());
+            retryCount++;
+            Serial.println("Retrying...");
+            delay(5000); // Wait for 5 seconds before retrying
+        }
     }
 
-    /* Assign the callback function for the long running token generation task */
-    config.token_status_callback = tokenStatusCallback; //see addons/TokenHelper.h
+    if (signedUp) {
+        // Assign the callback function for the long running token generation task
+        config.token_status_callback = tokenStatusCallback; // Ensure tokenStatusCallback is defined elsewhere
 
-    Firebase.begin(&config, &auth);
-    Firebase.reconnectWiFi(true);
+        // Initialize Firebase with the configuration and authentication details
+        Firebase.begin(&config, &auth);
+
+        // Inform Firebase to attempt WiFi reconnection automatically
+        Firebase.reconnectWiFi(true);
+    } else {
+        Serial.println("Failed to initialize Firebase after retries.");
+        // Handle failure (e.g., by going to deep sleep and trying again later)
+    }
 }
 
 

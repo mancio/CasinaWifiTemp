@@ -20,6 +20,6 @@ unsigned long convertToMicroseconds(unsigned long number, const String& unit) {
 }
 
 void goToDeepSleep() {
-    EspClass::deepSleep(convertToMicroseconds(10, "sec")); // 1 hour
+    EspClass::deepSleep(convertToMicroseconds(30, "min"));
 }
 
