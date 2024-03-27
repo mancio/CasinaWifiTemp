@@ -7,11 +7,15 @@ NTPClient timeClient(ntpUDP, "pool.ntp.org");
 
 void setupTimeClient() {
     timeClient.begin();
+    Serial.println("NTP client started");
 }
 
 unsigned long getCurrentTime() {
-    timeClient.update();
-    const unsigned long epochTime = timeClient.getEpochTime();
-    return epochTime;
+    if (!timeClient.update()) {
+        Serial.println("Failed to update time from NTP server");
+        timeClient.forceUpdate();
+    }
+    return timeClient.getEpochTime();
 }
+
 
