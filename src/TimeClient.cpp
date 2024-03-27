@@ -11,10 +11,21 @@ void setupTimeClient() {
 }
 
 unsigned long getCurrentTime() {
-    if (!timeClient.update()) {
-        Serial.println("Failed to update time from NTP server");
+    int retries = 0;
+    const int maxRetries = 3;
+
+    while (!timeClient.update() && retries < maxRetries) {
+        Serial.println("Failed to update time from NTP server, retrying...");
+        delay(2000); // Wait for 2 seconds before retrying
         timeClient.forceUpdate();
+        retries++;
     }
+
+    if (retries == maxRetries) {
+        Serial.println("Failed to update time after maximum retries");
+        // Handle the failure to obtain time after retries, if needed
+    }
+
     return timeClient.getEpochTime();
 }
 
