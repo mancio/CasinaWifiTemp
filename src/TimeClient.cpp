@@ -12,7 +12,7 @@ void setupTimeClient() {
 
 unsigned long getCurrentTime() {
     int retries = 0;
-    const int maxRetries = 3;
+    const int maxRetries = 2;
 
     while (!timeClient.update() && retries < maxRetries) {
         Serial.println("Failed to update time from NTP server, retrying...");

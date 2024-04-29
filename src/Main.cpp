@@ -7,7 +7,7 @@
 #include "SerialManager.h"
 
 void setup() {
-    initializeSerial(false, 9600);
+    initializeSerial(true, 9600);
     connectToWiFi();
     initializeFirebase();
     setupTimeClient();

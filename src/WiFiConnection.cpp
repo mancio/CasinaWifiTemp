@@ -3,12 +3,18 @@
 #include "Secrets.h"
 
 void connectToWiFi() {
+    int attempts = 0;  // Initialize connection attempts counter
     WiFi.begin(WIFI_SSID, WIFI_PASSWORD);
     Serial.print("Connecting to WiFi ..");
-    while (WiFi.status() != WL_CONNECTED) {
+    while (WiFi.status() != WL_CONNECTED && attempts < 2) {  // Check connection status and attempt limit
         Serial.print('.');
-        delay(1000);
+        delay(2000);
+        attempts++;  // Increment the counter after each attempt
     }
-    Serial.println(" connected");
-    Serial.println(WiFi.localIP());
+    if (WiFi.status() == WL_CONNECTED) {
+        Serial.println(" connected");
+        Serial.println(WiFi.localIP());
+    } else {
+        Serial.println(" connection failed");
+    }
 }

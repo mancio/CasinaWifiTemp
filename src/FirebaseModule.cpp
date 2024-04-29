@@ -22,7 +22,7 @@ void initializeFirebase() {
     WiFi.setAutoReconnect(true);
 
     int retryCount = 0;
-    const int maxRetries = 3; // Maximum number of retries
+    const int maxRetries = 2; // Maximum number of retries
     bool signedUp = false;
 
     while (!signedUp && retryCount < maxRetries) {
