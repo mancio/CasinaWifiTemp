@@ -7,7 +7,7 @@
 #include "SerialManager.h"
 
 void setup() {
-    initializeSerial(true, 9600);
+    initializeSerial(false, 9600);
     bool wifi = connectToWiFi();
     if (wifi) {
         initializeFirebase();
