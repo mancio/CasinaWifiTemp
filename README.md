@@ -1,6 +1,36 @@
+## WiFi Thermometer Setup Guide
+
+### Overview:
+
+This WiFi Thermometer is designed to measure temperature data and upload it directly to Firebase, providing a seamless way to monitor temperature readings remotely. The device is built using the NodeMCU V3 board, leveraging its WiFi capabilities to connect and transmit data over the internet.
+
+### Key Features:
+
+- **Real-time Temperature Monitoring:** Continuously measures and uploads temperature data to a Firebase database.
+- **Wireless Connectivity:** Utilizes the onboard WiFi module of the NodeMCU V3 board to connect to the internet.
+- **Firebase Integration:** Configured to interface directly with Firebase, allowing data to be accessed in real time.
+- **Energy Efficient:** Includes a deep sleep mode to save energy between data transmissions, making it ideal for long-term deployments.
+- **Enhanced Power Management:** Features a 1F supercapacitor to maintain operation in low battery and low temperature conditions. The supercapacitor supports higher energy demand during wake periods while minimizing battery drain during deep sleep phases, ensuring only minimal milliampere-hours (mAh) are consumed.
+- **Easy Configuration:** Users can set their WiFi and Firebase settings via a simple configuration file.
+
+### Technical Specifications:
+
+- **Board:** NodeMCU V3
+- **Connectivity:** WiFi (ESP8266)
+- **Power:** USB 5V or via battery with voltage monitoring, enhanced by a 1F supercapacitor for improved low-temperature performance and reduced energy consumption during wake cycles.
+- **Additional Components:** Temperature sensor, voltage divider circuit for battery monitoring
+
+### Setup:
+
+1. Configure your WiFi and Firebase settings in the `Secrets.h` file.
+2. Flash the firmware to the NodeMCU V3 board.
+3. Place the device in the desired location for temperature monitoring.
+4. Power the device using a USB connection or battery.
+5. Monitor the temperature data remotely through your Firebase console.
+
 ## NOTE
 
-add a new file ``Secrets.h`` and copy the following data inside it
+Add a new file `Secrets.h` and copy the following data inside it:
 
 ```cpp
 /**
@@ -74,4 +104,3 @@ add a new file ``Secrets.h`` and copy the following data inside it
 #define DATABASE_URL "REPLACE_WITH_YOUR_DATABASE_URL"
 
 #endif // CASINAWIFITEMP_SECRETS_H
-```
