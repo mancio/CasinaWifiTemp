@@ -4,6 +4,10 @@
 
 This WiFi Thermometer is designed to measure temperature data and upload it directly to Firebase, providing a seamless way to monitor temperature readings remotely. The device is built using the NodeMCU V3 board, leveraging its WiFi capabilities to connect and transmit data over the internet.
 
+
+![box](https://github.com/mancio/CasinaWifiTemp/blob/71a789c17b30f7a4f402f0c2387b660cc454c00f/photos/circuit.PNG)
+
+
 ### Key Features:
 
 - **Real-time Temperature Monitoring:** Continuously measures and uploads temperature data to a Firebase database.
