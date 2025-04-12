@@ -22,11 +22,12 @@ float getBatteryVoltage() {
     const float R2 = 10000.0; // 10K Ohms resistor
     const float adcRefVoltage = 3.3; // ADC reference voltage
     const float adcMax = 1023.0; // 10-bit ADC
+    const float fineTuneOffset = -0.02; // Adjust this value for fine-tuning
 
     auto adcValue = static_cast<float>(analogRead(analogPin));
     float adcVoltage = (adcValue / adcMax) * adcRefVoltage;
     float batteryVoltage = adcVoltage * ((R1 + R2) / R2);
 
-    return batteryVoltage;
+    return batteryVoltage + fineTuneOffset;
 }
 
