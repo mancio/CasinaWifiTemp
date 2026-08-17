@@ -28,7 +28,7 @@ unsigned long convertToMicroseconds(unsigned long number, const String& unit) {
 
 void goToDeepSleep() {
     // Use constants for time units
-    EspClass::deepSleep(convertToMicroseconds(1, HOUR));
+    EspClass::deepSleep(convertToMicroseconds(30, MINUTE));
 }
 
 

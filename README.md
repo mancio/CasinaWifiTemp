@@ -108,3 +108,8 @@ Add a new file `Secrets.h` and copy the following data inside it:
 #define DATABASE_URL "REPLACE_WITH_YOUR_DATABASE_URL"
 
 #endif // CASINAWIFITEMP_SECRETS_H
+```
+
+## License
+
+This project is licensed under the MIT License. See the `LICENSE` file for details.
