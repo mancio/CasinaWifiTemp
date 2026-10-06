@@ -17,6 +17,14 @@ unsigned long convertToMicroseconds(unsigned long number, const String& unit);
  */
 void goToDeepSleep();
 
+/**
+ * @brief Sleeps with no wake timer, until the reset button or a power cycle.
+ *
+ * Used when the pack is below BATTERY_CUTOFF_V, so the cells are not drained
+ * any further. Swap the batteries (or press RST) to resume.
+ */
+void goToDeepSleepForever();
+
 #endif
 
 

@@ -63,7 +63,8 @@ Fixes in order of payoff:
 4. **Remove the 1F supercapacitor from `VIN`.** It cannot do the job it was fitted for. Its ESR is on the order of 1-30 Ω against a battery pack of ~0.3-1 Ω, and in parallel the lower resistance carries the current, so the cap supplies only ~1-3% of each burst. It also sits upstream of the regulator (which still drops 1.1-1.3 V regardless), presents a near-short to the pack at boot while charging, and leaks 1-10 µA continuously. Supercapacitors are worthwhile for high-impedance sources such as coin cells or solar harvesting, not for an AA pack. If it stays, add 10-22 Ω in series to limit inrush.
 5. **Retry on failed connect.** `setup()` in `src/Main.cpp` skips straight to `goToDeepSleep()` when WiFi fails, so a single failure costs a full 30-minute slot and two in a row look like a 90-minute gap. Retry with a short sleep instead.
 6. **Shorten the high-current window.** `connectToWiFi()` uses `WiFiMulti` with two APs, forcing a full channel scan on every wake and allowing up to 10 s at peak current. A static IP plus BSSID/channel cached in RTC memory cuts this to a few hundred milliseconds. `WiFi.setOutputPower()` can also reduce peak draw.
-7. **Measure the battery before enabling WiFi.** `getBatteryVoltage()` is currently called with the radio active, so the value logged to Firebase is the sagged voltage rather than the resting one.
+7. **Measure the battery before enabling WiFi.** `getBatteryVoltage()` is currently called with the radio active, so the value logged to Firebase is the sagged voltage rather than the resting one. *Done:* `setup()` now reads the pack first, averaging 10 samples.
+8. **Low-voltage cutoff.** *Done:* below `BATTERY_CUTOFF_V` (4.0 V, 1.0 V/cell, in `include/SensorManagement.h`) the device uploads one last reading and then sleeps with no wake timer, so NiMH cells are not over-discharged. Swap the batteries or press RST to resume. Readings under 1.0 V mean no pack is fitted (running from USB), and the cutoff is skipped.
 
 ### Target wiring:
 
@@ -71,7 +72,7 @@ The board itself stays unmodified - only the battery routing changes. `VIN` is l
 
 ![wiring diagram](photos/wiring-diagram.svg)
 
-Works with both alkaline and NiMH AA cells (4.0-6.4 V across the pack). The firmware should stop at ~4.0 V on the pack (1.0 V/cell) so NiMH cells are not over-discharged.
+Works with both alkaline and NiMH AA cells (4.0-6.4 V across the pack). The firmware stops at 4.0 V on the pack (1.0 V/cell) so NiMH cells are not over-discharged - see fix 8.
 
 There is no power switch: **remove the batteries before plugging USB**, otherwise the AMS1117 (fed from USB) and the S7V8F3 both drive the 3.3 V rail at once. The voltage divider stays on the raw pack, upstream of the converter - moving it downstream would just measure a constant 3.3 V.
 

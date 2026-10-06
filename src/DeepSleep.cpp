@@ -31,4 +31,6 @@ void goToDeepSleep() {
     EspClass::deepSleep(convertToMicroseconds(30, MINUTE));
 }
 
-
+void goToDeepSleepForever() {
+    EspClass::deepSleep(0);
+}

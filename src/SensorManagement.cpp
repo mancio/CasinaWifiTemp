@@ -24,7 +24,14 @@ float getBatteryVoltage() {
     const float adcMax = 1023.0; // 10-bit ADC
     const float fineTuneOffset = -0.02; // Compensates the NodeMCU internal A0 divider loading R2; see README
 
-    auto adcValue = static_cast<float>(analogRead(analogPin));
+    const int samples = 10;
+
+    long adcSum = 0;
+    for (int i = 0; i < samples; i++) {
+        adcSum += analogRead(analogPin);
+        delay(2);
+    }
+    float adcValue = static_cast<float>(adcSum) / samples;
     float adcVoltage = (adcValue / adcMax) * adcRefVoltage;
     float batteryVoltage = adcVoltage * ((R1 + R2) / R2);
 
