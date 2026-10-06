@@ -11,6 +11,7 @@ TOP = 10.0
 GND = 0.0
 DIV_X = 4.5
 BUCK_X = 7.0
+CAP_X = 6.2
 MCU_X = 17.0
 SENSOR_X = 28.0
 
@@ -21,16 +22,19 @@ def build() -> schemdraw.Drawing:
 
     # --- Battery ------------------------------------------------------------
     d += elm.Line().at((0, GND)).to((0, 3.5))
-    d += elm.Battery().at((0, 3.5)).up().length(3).label("BT1\n4x AA\n4.0-6.4 V", loc="left")
+    d += elm.Battery().at((0, 3.5)).up().length(3).label("BT1\n4x AA\nalkaline\nor NiMH\n4.0-6.4 V", loc="bottom", ofst=0.4)
     d += elm.Line().at((0, 6.5)).to((0, TOP))
 
-    # --- Switch on the positive rail ---------------------------------------
-    d += elm.Line().at((0, TOP)).to((1.0, TOP))
-    d += elm.Switch().at((1.0, TOP)).right().length(2).label(
-        "SW1\nopen before\nplugging USB", loc="top"
-    )
-    d += elm.Line().at((3.0, TOP)).to((BUCK_X, TOP))
+    # --- Positive rail to the converter -------------------------------------
+    d += elm.Line().at((0, TOP)).to((BUCK_X, TOP))
     d += elm.Dot().at((DIV_X, TOP))
+
+    # --- Input bulk capacitor, right at U1 VIN ------------------------------
+    d += elm.Dot().at((CAP_X, TOP))
+    d += elm.Capacitor(polar=True).at((CAP_X, TOP)).down().length(2).label(
+        "C1\n100 µF\n16 V", loc="right", ofst=0.15
+    )
+    d += elm.Line().at((CAP_X, TOP - 2)).to((CAP_X, GND))
 
     # --- Buck-boost converter ----------------------------------------------
     buck = elm.Ic(
@@ -43,8 +47,8 @@ def build() -> schemdraw.Drawing:
         label="U1\nPololu S7V8F3\nbuck-boost 3.3 V",
     ).right().at((BUCK_X, TOP)).anchor("VIN")
     d += buck
-    d += elm.Line().at(buck.GND).to((buck.GND.x - 1.0, buck.GND.y))
-    d += elm.Line().at((buck.GND.x - 1.0, buck.GND.y)).to((buck.GND.x - 1.0, GND))
+    d += elm.Line().at(buck.GND).to((buck.GND.x - 0.4, buck.GND.y))
+    d += elm.Line().at((buck.GND.x - 0.4, buck.GND.y)).to((buck.GND.x - 0.4, GND))
 
     # --- NodeMCU ------------------------------------------------------------
     mcu = elm.Ic(
@@ -63,19 +67,13 @@ def build() -> schemdraw.Drawing:
     d += mcu
     d += elm.Line().at(buck.VOUT).to((MCU_X, TOP))
 
-    # --- Bulk capacitance on the 3V3 rail -----------------------------------
-    for x, cap_label in ((13.0, "C1\n1000 µF\nlow ESR"), (15.0, "C2\n100 nF")):
-        d += elm.Dot().at((x, TOP))
-        d += elm.Capacitor2().at((x, TOP)).down().length(2).label(cap_label, loc="right", ofst=0.15)
-        d += elm.Line().at((x, TOP - 2)).to((x, GND))
-
     # --- Battery voltage divider to A0 --------------------------------------
     a0 = mcu.A0
-    d += elm.Resistor().at((DIV_X, TOP)).down().length(2.5).label("R1\n60k", loc="left")
+    d += elm.Resistor().at((DIV_X, TOP)).down().length(2.5).label("R1\n60k", loc="bottom", ofst=0.3)
     d += elm.Line().at((DIV_X, TOP - 2.5)).to((DIV_X, a0.y))
     tap = (DIV_X, a0.y)
     d += elm.Dot().at(tap)
-    d += elm.Resistor().at(tap).down().length(2.5).label("R2\n10k", loc="left")
+    d += elm.Resistor().at(tap).down().length(2.5).label("R2\n10k", loc="bottom", ofst=0.3)
     d += elm.Line().at((DIV_X, a0.y - 2.5)).to((DIV_X, GND))
     d += elm.Line().at(tap).to(a0)
 
@@ -83,7 +81,7 @@ def build() -> schemdraw.Drawing:
     d += elm.Line().at((0, GND)).to((SENSOR_X + 1.0, GND))
     d += elm.Line().at(mcu.GND).to((mcu.GND.x - 1.2, mcu.GND.y))
     d += elm.Line().at((mcu.GND.x - 1.2, mcu.GND.y)).to((mcu.GND.x - 1.2, GND))
-    d += elm.Ground().at((9.5, GND)).down()
+    d += elm.Ground().at((9.5, GND))
 
     # --- D0 to RST jumper (deep sleep wake) ---------------------------------
     jumper_x = mcu.D0.x + 1.5
